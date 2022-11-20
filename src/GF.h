@@ -8,9 +8,9 @@
 
 class GF {
 
-    const int range = 1234567891;
+    static const int range = 1234567891;
+    int load;
 public:
-    long long load;
     GF();
     GF(long long load);
     GF(const GF& gf);
@@ -21,11 +21,11 @@ public:
     GF operator /(const GF& g);
     GF operator %(const GF& g);
     GF operator ^(const GF& g);
-    GF operator ==(const GF& g);
-    GF operator <(const GF& g);
-    GF operator <=(const GF& g);
-    GF operator >=(const GF& g);
-    GF operator >(const GF& g);
+    bool operator ==(const GF& g);
+    bool operator <(const GF& g);
+    bool operator <=(const GF& g);
+    bool operator >=(const GF& g);
+    bool operator >(const GF& g);
     GF operator <<(const GF& g);
     GF operator >>(const GF& g);
     GF operator <<(int x);
@@ -33,9 +33,7 @@ public:
     friend std::ostream& operator <<(std::ostream& os, const GF& g);
     friend std::istream& operator >>(std::istream& is, const GF& g);
     GF int_to_GF(const int x);
-    int GF_to_int(const GF g);
-
-
+    int GF_to_int();
 };
 
 

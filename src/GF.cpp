@@ -8,8 +8,10 @@ GF::GF() :load(0) {
 
 }
 
-GF::GF(long long int load) :load(load) {
-
+GF::GF(long long int load) :load(load%range) {
+    if (load > range) {
+        throw "out of scope, divided by range (1234567891),\nthe new value is: " + this->load;
+    }
 }
 
 GF::GF(const GF &gf) {
@@ -17,7 +19,7 @@ GF::GF(const GF &gf) {
 }
 
 GF::~GF() {
-    std::cout << "deleted" << std::endl;
+    //std::cout << "deleted" << std::endl;
 }
 
 GF GF::operator+(const GF &g) {
@@ -33,59 +35,103 @@ GF GF::operator*(const GF &g) {
 }
 
 GF GF::operator/(const GF &g) {
-    return GF();
+    if (g.load == 0) {
+        throw "division by zero";
+    }
+    return GF((this->load/g.load)%range);
 }
 
 GF GF::operator^(const GF &g) {
-    GF result = GF(1);
-
-    return GF();
+    auto cp_of_this = GF(this->load);
+    auto cp_of_g = GF(g.load);
+    auto result = GF(1);
+    while (cp_of_g.load > 0) {
+        if (cp_of_g.load%2 == 1) {
+           result = result * cp_of_this;
+        }
+        cp_of_this = cp_of_this*cp_of_this;
+        cp_of_g = cp_of_g >> 1;
+    }
+    return result;
 }
 
-GF GF::operator==(const GF &g) {
-    return GF();
+bool GF::operator==(const GF &g) {
+    if (this->load == g.load) {
+        return 1;
+    } else {
+        return false;
+    }
 }
 
-GF GF::operator<(const GF &g) {
-    return GF();
+bool GF::operator<(const GF &g) {
+    if (this->load < g.load) {
+        return 1;
+    } else {
+        return false;
+    }
 }
 
-GF GF::operator<=(const GF &g) {
-    return GF();
+bool GF::operator<=(const GF &g) {
+    if (this->load <= g.load) {
+        return 1;
+    } else {
+        return false;
+    }
 }
 
-GF GF::operator>=(const GF &g) {
-    return GF();
+bool GF::operator>=(const GF &g) {
+    if (this->load >= g.load) {
+        return 1;
+    } else {
+        return false;
+    }
 }
 
-GF GF::operator>(const GF &g) {
-    return GF();
+bool GF::operator>(const GF &g) {
+    if (this->load > g.load) {
+        return 1;
+    } else {
+        return false;
+    }
 }
 
 GF GF::operator<<(const GF &g) {
-    return GF();
+    return GF((this->load << g.load)%range);
 }
 
 GF GF::operator>>(const GF &g) {
-    return GF();
+    return GF((this->load >> g.load)%range);
 }
 
 GF GF::int_to_GF(const int x) {
-    return GF();
+    return GF(x%range);
 }
 
-int GF::GF_to_int(const GF g) {
-    return 0;
+int GF::GF_to_int() {
+    return this->load;
 }
 
 GF GF::operator%(const GF &g) {
+    if (g.load == 0) {
+        throw "division by zero";
+    }
     return GF(this->load%g.load);
 }
 
 GF GF::operator<<(int x) {
-    return GF(this->load << x);
+    return GF((this->load << x)%range);
 }
 
 GF GF::operator>>(int x) {
-    return GF(this->load >> x);
+    return GF((this->load >> x)%range);
 }
+
+std::ostream &operator<<(std::ostream &os, const GF &g) {
+    os << g.load;
+    return os;
+}
+std::istream  &operator>>(std::istream &is, const GF &g) {
+    is >> g.load;
+    return is;
+}
+
