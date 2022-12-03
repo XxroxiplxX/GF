@@ -38,7 +38,16 @@ GF GF::operator/(const GF &g) {
     if (g.load == 0) {
         throw "division by zero";
     }
-    return GF((this->load/g.load)%range);
+    int g_copy = g.load;
+    int x,y;
+    int gcd = ex_gcd(g.load, range, &x, &y);
+    if (gcd == 1) { //x == g^-1
+        return GF((this->load*x)%range);
+    } else {
+        throw "divisor not inversible";
+    }
+
+    
 }
 
 GF GF::operator^(const GF &g) {
@@ -135,5 +144,25 @@ std::ostream &operator<<(std::ostream &os, const GF &g) {
 std::istream  &operator>>(std::istream &is, const GF &g) {
     is >> g.load;
     return is;
+}
+
+int GF::ex_gcd(int a, int b, int *x, int *y) {
+    
+    if (a == 0)
+    {
+        *x = 0;
+        *y = 1;
+        return b;
+    }
+ 
+    int x1, y1; // To store results of recursive call
+    int gcd = ex_gcd(b%a, a, &x1, &y1);
+ 
+    // Update x and y using results of
+    // recursive call
+    *x = y1 - (b/a) * x1;
+    *y = x1;
+ 
+    return gcd;
 }
 

@@ -1,5 +1,6 @@
 #include <iostream>
+#include "GF.h"
 int main(int argc, char** argv) {
-    std::cout << argv[2] << std::endl;
+    auto g = GF(3)/(GF(4));
     return 0;
 }

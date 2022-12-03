@@ -10,7 +10,9 @@ class GF {
 
     static const int range = 1234567891;
     long long load;
+    int ex_gcd(int a, int b, int *x, int *y);
 public:
+
     GF();
     GF(long long load);
     GF(const GF& gf);
