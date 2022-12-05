@@ -8,14 +8,18 @@ GF::GF() :load(0) {
 
 }
 
-GF::GF(long long int load) :load(load%range) {
+GF::GF(long long int load) {
     if (load > range) {
         throw "out of scope, divided by range (1234567891)";
+    } else if (load < 0) {
+        this->load = load%range + range;
+    } else {
+        this->load = load%range;
     }
 }
 
 GF::GF(const GF &gf) {
-    this->load = gf.load;
+    this->load = gf.load%range;
 }
 
 GF::~GF() {
@@ -27,7 +31,11 @@ GF GF::operator+(const GF &g) {
 }
 
 GF GF::operator-(const GF &g) {
-    return GF((this->load - g.load)%range);
+    int r = (this->load - g.load)%range;
+    if (r < 0) {
+        r += range;
+    }
+    return GF(r);
 }
 
 GF GF::operator*(const GF &g) {
@@ -51,6 +59,11 @@ GF GF::operator/(const GF &g) {
 }
 
 GF GF::operator^(const GF &g) {
+    if (g.load < 0) {
+        auto exp = GF(g.load);
+        auto t_c = GF(this->load);
+        return GF(1)/(t_c ^ (GF(-1)*exp));
+    }
     if (g.load == 0) {
         return GF(1);
     }
