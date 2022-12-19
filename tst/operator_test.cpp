@@ -5,6 +5,7 @@
 #include "GF.h"
 #include "iostream"
 #include "math.h"
+#include "gmock/gmock.h"
 using namespace std;
 TEST(operator_test, basic_operands) {
     GF g1 = GF(14);
